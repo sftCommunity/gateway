@@ -8,7 +8,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
   await app.listen(envs.port);
-
+  app.setGlobalPrefix('api');
   logger.log(`Gateway running on port ${envs.port}`);
 }
 bootstrap();
