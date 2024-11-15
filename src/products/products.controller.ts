@@ -11,10 +11,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom } from 'rxjs';
 import { PaginationDto } from 'src/common/dto';
 import { PRODUCTS_SERVICE } from 'src/config';
-import { CreateProductDto } from './dto';
+import { CreateProductDto, UpdateProductDto } from './dto';
 
 @Controller('products')
 export class ProductsController {
@@ -52,16 +52,25 @@ export class ProductsController {
   }
 
   @Patch(':id')
-  updateProduct(@Param('id') id: string) {
-    return {
-      message: `Product ${id} updated`,
-    };
+  updateProduct(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    return this.productsClient
+      .send({ cmd: 'update_product' }, { id, ...updateProductDto })
+      .pipe(
+        catchError((e) => {
+          throw new RpcException(e);
+        }),
+      );
   }
 
   @Delete(':id')
   deleteProduct(@Param('id') id: string) {
-    return {
-      message: `Product ${id} deleted`,
-    };
+    return this.productsClient.send({ cmd: 'delete_product' }, { id }).pipe(
+      catchError((e) => {
+        throw new RpcException(e);
+      }),
+    );
   }
 }
