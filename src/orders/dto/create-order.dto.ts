@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsPositive,
 } from 'class-validator';
-import { OrderStatus, OrderStatusList } from '../enum';
+import { OrderStatus, OrderStatusList } from '../enum/order.enum';
 
 export class CreateOrderDto {
   @IsNumber()
