@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -13,6 +14,7 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { PaginationDto } from 'src/common/dto';
 import { PRODUCTS_SERVICE } from 'src/config';
+import { CreateProductDto } from './dto';
 
 @Controller('products')
 export class ProductsController {
@@ -22,10 +24,11 @@ export class ProductsController {
   ) {}
 
   @Post()
-  createProduct() {
-    return {
-      message: 'Product created',
-    };
+  createProduct(@Body() createProductDto: CreateProductDto) {
+    return this.productsClient.send(
+      { cmd: 'create_product' },
+      createProductDto,
+    );
   }
 
   @Get()
