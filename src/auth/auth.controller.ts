@@ -2,10 +2,11 @@ import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 import { NATS_SERVICE } from 'src/config';
-import { Token, User } from './decorators';
+import { Auth, Token, User } from './decorators';
 import { LoginUserDto, RegisterUserDto } from './dto';
 import { AuthGuard } from './guards/auth.guard';
 import { CurrentUser } from './interfaces/current-user.interface';
+import { ValidRoles } from './interfaces/valid-roles';
 
 @Controller('auth')
 export class AuthController {
@@ -30,8 +31,17 @@ export class AuthController {
   }
 
   @Get('verify')
-  @UseGuards(AuthGuard)
   verifyToken(@User() user: CurrentUser, @Token() token: string) {
     return { user, token };
+  }
+
+  @Get('execute_seed')
+  @Auth(ValidRoles.SUPER_ADMIN)
+  executeSeed() {
+    return this.client.send('auth.execute.seed', {}).pipe(
+      catchError((e) => {
+        throw new RpcException(e);
+      }),
+    );
   }
 }
