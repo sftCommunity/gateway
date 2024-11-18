@@ -31,6 +31,7 @@ export class AuthController {
   }
 
   @Get('verify')
+  @Auth()
   verifyToken(@User() user: CurrentUser, @Token() token: string) {
     return { user, token };
   }
