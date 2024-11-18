@@ -4,7 +4,7 @@ import { catchError } from 'rxjs';
 import { NATS_SERVICE } from 'src/config';
 import { Token, User } from './decorators';
 import { LoginUserDto, RegisterUserDto } from './dto';
-import { AuthGuard } from './guards/auth.guards';
+import { AuthGuard } from './guards/auth.guard';
 import { CurrentUser } from './interfaces/current-user.interface';
 
 @Controller('auth')
