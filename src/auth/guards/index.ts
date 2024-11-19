@@ -1,2 +1,2 @@
 export * from './auth.guard';
-export * from './user-role.guard';
+export * from '../../common/guards/user-role.guard';
