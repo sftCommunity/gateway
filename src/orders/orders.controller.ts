@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { PaginationDto } from 'src/common';
+import { PaginationDto } from 'src/common/dto';
 import { NATS_SERVICE } from 'src/config';
 import { CreateOrderDto, OrderPaginationDto, StatusDto } from './dto';
 
