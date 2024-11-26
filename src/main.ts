@@ -3,7 +3,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 import { RpcCustomExceptionFilter } from './common/exceptions';
+import { LoggerInterceptor } from './common/interceptors';
 import { envs } from './config';
+import { LoggerService } from './logger/logger.service';
 
 async function bootstrap() {
   const logger = new Logger('Gateway');
@@ -18,6 +20,7 @@ async function bootstrap() {
     }),
   );
 
+  app.useGlobalInterceptors(new LoggerInterceptor(new LoggerService()));
   app.useGlobalFilters(new RpcCustomExceptionFilter());
 
   await app.listen(envs.port);
