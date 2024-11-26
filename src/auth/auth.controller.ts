@@ -1,12 +1,11 @@
-import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
+import { ValidRoles } from 'src/common/interfaces';
 import { NATS_SERVICE } from 'src/config';
 import { Auth, Token, User } from './decorators';
 import { LoginUserDto, RegisterUserDto } from './dto';
-import { AuthGuard } from './guards/auth.guard';
 import { CurrentUser } from './interfaces/current-user.interface';
-import { ValidRoles } from './interfaces/valid-roles';
 
 @Controller('auth')
 export class AuthController {
@@ -36,10 +35,20 @@ export class AuthController {
     return { user, token };
   }
 
+  @Get('create_session')
+  @Auth()
+  createSession(@Token() token: string) {
+    return this.client.send('auth.create.session', token).pipe(
+      catchError((e) => {
+        throw new RpcException(e);
+      }),
+    );
+  }
+
   @Get('execute_seed')
   @Auth(ValidRoles.SUPER_ADMIN)
-  executeSeed() {
-    return this.client.send('auth.execute.seed', {}).pipe(
+  executeSeed(@Token() token: string) {
+    return this.client.send('seed.execute.seed', token).pipe(
       catchError((e) => {
         throw new RpcException(e);
       }),
