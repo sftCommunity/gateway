@@ -1,7 +1,18 @@
-import { Controller, Get, Inject, Param, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Query,
+} from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 import { NATS_SERVICE } from 'src/config';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserPaginationDto } from './dto/user-pagination.dto';
 
 @Controller('user')
@@ -20,6 +31,24 @@ export class UserController {
   @Get(':term')
   findOne(@Param('term') term: string) {
     return this.client.send('user.find.one', term).pipe(
+      catchError((e) => {
+        throw new RpcException(e);
+      }),
+    );
+  }
+
+  @Patch()
+  update(@Body() updateUserDto: UpdateUserDto) {
+    return this.client.send('user.update', updateUserDto).pipe(
+      catchError((e) => {
+        throw new RpcException(e);
+      }),
+    );
+  }
+
+  @Delete(':id')
+  delete(@Param('id', ParseUUIDPipe) id: string) {
+    return this.client.send('user.delete', id).pipe(
       catchError((e) => {
         throw new RpcException(e);
       }),
