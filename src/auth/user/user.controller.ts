@@ -7,17 +7,28 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { catchError } from 'rxjs';
 import { NATS_SERVICE } from 'src/config';
+import { RegisterUserDto } from '../dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserPaginationDto } from './dto/user-pagination.dto';
 
 @Controller('user')
 export class UserController {
   constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
+
+  @Post()
+  create(@Body() registerUserDto: RegisterUserDto) {
+    return this.client.send('user.create', registerUserDto).pipe(
+      catchError((e) => {
+        throw new RpcException(e);
+      }),
+    );
+  }
 
   @Get('find_all')
   findAll(@Query() userPaginationDto: UserPaginationDto) {
