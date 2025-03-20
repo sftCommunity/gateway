@@ -9,16 +9,17 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
+    "start": "node dist/main.js",
+    "start:dev": "nest start --watch --debug=0.0.0.0:9229",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "lint": "eslint --ignore-path .gitignore . --ext .js,.mjs,cjs,.ts,.mts",
+    "lint:fix": "eslint --ignore-path .gitignore . --ext .js,.mjs,cjs,.ts,.mts --fix",
+    "lint:file": "eslint --ignore-path .gitignore",
+    "lint:yaml": "chmod +x scripts/lint_yaml.sh && ./scripts/lint_yaml.sh",
+    "prepare": "[ -f .husky/install.mjs ] && node .husky/install.mjs || true",
+    "typos": "chmod +x scripts/check_typos.sh && ./scripts/check_typos.sh",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
