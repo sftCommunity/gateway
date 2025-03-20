@@ -10,7 +10,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const logger = new Logger('Gateway');
-
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
 
@@ -28,6 +27,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Gateway API')
     .setVersion('1.0')
+    .addBearerAuth() // Add token input
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
