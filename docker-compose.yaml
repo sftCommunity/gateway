@@ -12,15 +12,15 @@ services:
       args:
         - PORT=${PORT:-3000}
     ports:
-      - "${PORT:-3000}:${PORT:-3000}"
-      - "9229:9229"
+      - '${PORT:-3000}:${PORT:-3000}'
+      - '9229:9229'
     volumes:
       - ./src:/app/src
     deploy:
       resources:
         limits:
-          cpus: "1"
-          memory: "512m"
+          cpus: '1'
+          memory: '512m'
         reservations:
-          cpus: "0.25"
-          memory: "256m"
+          cpus: '0.25'
+          memory: '256m'

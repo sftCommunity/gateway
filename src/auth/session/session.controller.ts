@@ -14,7 +14,12 @@ export class SessionController {
   @Auth()
   createSession(
     @Body() createSessionDto: CreateSessionDto,
-    @User() user: JwtPayload,
+    @User()
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    },
   ) {
     return this.client
       .send('session.create', { ...createSessionDto, user_id: user.id })

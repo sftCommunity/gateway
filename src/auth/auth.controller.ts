@@ -5,6 +5,7 @@ import { NATS_SERVICE } from 'src/config';
 import { Auth, Token, User } from './decorators';
 import { LoginUserDto, RegisterUserDto } from './dto';
 import { JwtPayload } from './interfaces';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +31,15 @@ export class AuthController {
 
   @Get('verify')
   @Auth()
-  verifyToken(@User() user: JwtPayload, @Token() token: string) {
+  verifyToken(
+    @User()
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    },
+    @Token() token: string,
+  ) {
     return { user, token };
   }
 }
