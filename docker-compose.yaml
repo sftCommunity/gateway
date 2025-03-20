@@ -1,8 +1,8 @@
 version: '3.8'
 
 services:
-  gateway-development:
-    container_name: gateway-development
+  gateway:
+    container_name: gateway
     restart: unless-stopped
     env_file: .env
     build:
